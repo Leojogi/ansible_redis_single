@@ -1,0 +1,66 @@
+- name: copy package
+  copy:
+    src: /root/ansible_redis/roles/install_redis_cluster/files/{{ package }}
+    dest: /root/
+    owner: root
+    group: root
+    mode: 755
+  tags: copy_package
+
+- name: uncompose package
+  shell: "tar -xzf '{{ package }}' -C /usr/local/"
+  tags: uncompose_package
+
+- name: set env
+  shell: "echo 'export PATH=/usr/local/{{package_name}}/bin:$PATH' >> /etc/profile"
+  register: return_value
+  failed_when: 'return_value.rc != 0'
+  tags: set_env
+
+- name: source env
+  shell: "source /etc/profile"
+  register: return_value_source
+  failed_when: 'return_value_source.rc != 0'
+  tags: source_env
+
+- name: create dir
+  file:
+    path: "{{ dir }}/{{ item }}"
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: "0755"
+    recurse: yes
+  with_items: "{{ ports }}"
+  tags: create_dir
+
+- name: modify config file
+  template:
+    src: redis-stack.conf.j2
+    dest: "{{dir}}/{{item}}/redis-stack.conf"
+    owner: "root"
+    group: "root"
+    mode: "0660"
+    force: yes
+    backup: yes
+  with_items: "{{ ports }}"
+  tags: conf
+
+- name: start instance
+  shell: "/usr/local/{{package_name}}/bin/redis-server {{dir}}/{{item}}/redis-stack.conf"
+  register: return_value_1
+  failed_when: 'return_value_1.rc != 0'
+  with_items: "{{ ports }}"
+  tags: start_instance
+
+- name: copy cluster script
+  template:
+    src: start_redis_cluster.exp.j2
+    dest: "/root/ansible_redis_single/roles/install_redis_cluster/files/start_redis_cluster.exp"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+    force: yes
+    backup: no
+  delegate_to: localhost
+  tags: copy_script

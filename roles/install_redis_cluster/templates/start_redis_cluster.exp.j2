@@ -1,0 +1,7 @@
+#!/usr/bin/expect
+spawn /usr/local/{{package_name}}/bin/redis-cli --cluster create --cluster-replicas {{replicas}} {% for port in ports %}{{ansible_default_ipv4.address}}:{{ port }}{% if not loop.last %} {% endif %}{% endfor %}
+
+expect "yes"
+send "yes\r"
+
+expect eof

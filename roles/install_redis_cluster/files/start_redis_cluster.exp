@@ -1,0 +1,6 @@
+#!/usr/bin/expect
+spawn /usr/local/redis-stack-server-6.2.6-v1/bin/redis-cli --cluster create --cluster-replicas 1 10.182.220.142:8001 10.182.220.142:8002 10.182.220.142:8003 10.182.220.142:8004 10.182.220.142:8005 10.182.220.142:8006
+expect "yes"
+send "yes\r"
+
+expect eof

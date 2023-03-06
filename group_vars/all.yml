@@ -1,0 +1,7 @@
+---
+package: redis-stack-server-6.2.6-v1.rhel7.x86_64.tar.gz
+package_name: redis-stack-server-6.2.6-v1
+dir: /usr/local/redis-cluster-v2
+ports: ["8001", "8002", "8003", "8004", "8005", "8006"]
+replicas: 1
+

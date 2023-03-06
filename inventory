@@ -1,0 +1,4 @@
+redis-node1  ansible_ssh_host=10.182.220.142  ansible_ssh_port=22 ansible_ssh_pass=hillstone hostname=redis-node2 role=master 
+
+[redis-cluster]
+redis-node1

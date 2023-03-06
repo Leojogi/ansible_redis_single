@@ -1,0 +1,17 @@
+---
+
+- name: "初始化"
+  hosts: redis-cluster
+  roles:
+    - { role: 'init' }
+
+- name: "安装"
+  hosts: redis-cluster
+  roles:
+    - { role: 'install_redis_cluster' }
+
+- name: "启动集群"
+  hosts: redis-cluster
+  roles:
+    - { role: 'start_cluster' }
+

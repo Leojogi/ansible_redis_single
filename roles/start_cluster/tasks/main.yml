@@ -1,0 +1,3 @@
+- name: start cluster
+  script: /root/ansible_redis_single/roles/install_redis_cluster/files/start_redis_cluster.exp
+  tags: start_cluster
